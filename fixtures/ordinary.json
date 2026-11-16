@@ -1,0 +1,64 @@
+{
+  "phases": [
+    {
+      "routes": [
+        {
+          "path": "/live.mpd",
+          "headers": {
+            "content-type": "application/dash+xml"
+          },
+          "body": "<?xml version=\"1.0\"?><MPD xmlns=\"urn:mpeg:dash:schema:mpd:2011\" type=\"dynamic\" availabilityStartTime=\"2026-10-12T01:00:00Z\" publishTime=\"2026-10-12T01:00:12Z\" timeShiftBufferDepth=\"PT12S\"><Period id=\"hall\" start=\"PT0S\"><AdaptationSet mimeType=\"video/mp4\"><Representation id=\"camera-a\" bandwidth=\"800000\"><BaseURL>/media/a/</BaseURL><SegmentTemplate timescale=\"1\" initialization=\"init.mp4\" media=\"$Time$.m4s\"><SegmentTimeline><S t=\"0\" d=\"4\" r=\"2\"/></SegmentTimeline></SegmentTemplate></Representation></AdaptationSet></Period></MPD>"
+        },
+        {
+          "path": "/media/a/init.mp4",
+          "headers": {
+            "content-type": "video/mp4"
+          },
+          "base64": "AAAAGGZ0eXBpc29tAAAAAWlzb21pc28y"
+        },
+        {
+          "path": "/media/a/0.m4s",
+          "headers": {
+            "content-type": "video/iso.segment"
+          },
+          "base64": "AAAAFG1vb2YAAAAAAAAABAAAAAE="
+        },
+        {
+          "path": "/media/a/4.m4s",
+          "headers": {
+            "content-type": "video/iso.segment"
+          },
+          "base64": "AAAAFG1vb2YAAAAEAAAABAAAAAE="
+        },
+        {
+          "path": "/media/a/8.m4s",
+          "headers": {
+            "content-type": "video/iso.segment"
+          },
+          "base64": "AAAAFG1vb2YAAAAIAAAABAAAAAE="
+        },
+        {
+          "path": "/media/a/12.m4s",
+          "headers": {
+            "content-type": "video/iso.segment"
+          },
+          "base64": "AAAAFG1vb2YAAAAMAAAABAAAAAE="
+        },
+        {
+          "path": "/media/a/16.m4s",
+          "headers": {
+            "content-type": "video/iso.segment"
+          },
+          "base64": "AAAAFG1vb2YAAAAQAAAABAAAAAE="
+        },
+        {
+          "path": "/clock",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": "{\"now\": \"2026-10-12T01:00:20Z\"}"
+        }
+      ]
+    }
+  ]
+}
