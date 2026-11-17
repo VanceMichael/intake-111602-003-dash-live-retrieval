@@ -1,0 +1,47 @@
+{
+  "phases": [
+    {
+      "routes": [
+        {
+          "path": "/live.mpd",
+          "headers": { "content-type": "application/dash+xml" },
+          "body": "<?xml version=\"1.0\"?><MPD xmlns=\"urn:mpeg:dash:schema:mpd:2011\" type=\"dynamic\" availabilityStartTime=\"2026-10-12T03:00:00Z\" publishTime=\"2026-10-12T03:00:10Z\" timeShiftBufferDepth=\"PT30S\"><Period id=\"hall\" start=\"PT0S\"><AdaptationSet mimeType=\"video/mp4\"><Representation id=\"camera-r\" bandwidth=\"800000\"><BaseURL>/media/r/</BaseURL><SegmentTemplate timescale=\"1\" initialization=\"init.mp4\" media=\"$Time$.m4s\"><SegmentTimeline><S t=\"0\" d=\"4\" r=\"1\"/></SegmentTimeline></SegmentTemplate></Representation></AdaptationSet></Period></MPD>"
+        },
+        {
+          "path": "/media/r/init.mp4",
+          "headers": { "content-type": "video/mp4" },
+          "base64": "AAAAGGZ0eXBpc29tAAAAAXJpdA=="
+        },
+        { "path": "/media/r/0.m4s", "headers": { "content-type": "video/iso.segment" }, "base64": "AAAACnZlcnNpb24tb25lLTA=" },
+        { "path": "/media/r/4.m4s", "headers": { "content-type": "video/iso.segment" }, "base64": "AAAACnZlcnNpb24tb25lLTQ=" },
+        {
+          "path": "/clock",
+          "headers": { "content-type": "application/json" },
+          "body": "{\"now\": \"2026-10-12T03:00:10Z\"}"
+        }
+      ]
+    },
+    {
+      "routes": [
+        {
+          "path": "/live.mpd",
+          "headers": { "content-type": "application/dash+xml" },
+          "body": "<?xml version=\"1.0\"?><MPD xmlns=\"urn:mpeg:dash:schema:mpd:2011\" type=\"dynamic\" availabilityStartTime=\"2026-10-12T03:00:00Z\" publishTime=\"2026-10-12T03:00:18Z\" timeShiftBufferDepth=\"PT30S\"><Period id=\"hall\" start=\"PT0S\"><AdaptationSet mimeType=\"video/mp4\"><Representation id=\"camera-r\" bandwidth=\"800000\"><BaseURL>/media/r/</BaseURL><SegmentTemplate timescale=\"1\" initialization=\"init.mp4\" media=\"$Time$.m4s\"><SegmentTimeline><S t=\"0\" d=\"4\" r=\"2\"/></SegmentTimeline></SegmentTemplate></Representation></AdaptationSet></Period></MPD>"
+        },
+        {
+          "path": "/media/r/init.mp4",
+          "headers": { "content-type": "video/mp4" },
+          "base64": "AAAAGGZ0eXBpc29tAAAAAXJpdA=="
+        },
+        { "path": "/media/r/0.m4s", "headers": { "content-type": "video/iso.segment" }, "base64": "AAAACnZlcnNpb24tdHdvLTA=" },
+        { "path": "/media/r/4.m4s", "headers": { "content-type": "video/iso.segment" }, "base64": "AAAACnZlcnNpb24tdHdvLTQ=" },
+        { "path": "/media/r/8.m4s", "headers": { "content-type": "video/iso.segment" }, "base64": "AAAACnZlcnNpb24tdHdvLTg=" },
+        {
+          "path": "/clock",
+          "headers": { "content-type": "application/json" },
+          "body": "{\"now\": \"2026-10-12T03:00:18Z\"}"
+        }
+      ]
+    }
+  ]
+}

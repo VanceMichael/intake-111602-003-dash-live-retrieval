@@ -26,7 +26,7 @@ export class Catalog {
     await rename(temporary, path);
   }
 
-  async accept({ source, bytes, mediaType, preview }) {
+  async accept({ source, bytes, mediaType, preview, context = null }) {
     if (!source || !Buffer.isBuffer(bytes)) throw new TypeError('来源与原始字节不能为空');
     const digest = createHash('sha256').update(bytes).digest('hex');
     const operation = this.serial.then(async () => {
@@ -40,7 +40,7 @@ export class Catalog {
         await this.atomic(objectPath, bytes);
       }
       const receipt = { id: randomUUID(), source, digest, bytes: bytes.length,
-        mediaType, preview, receivedAt: new Date().toISOString() };
+        mediaType, preview, context, receivedAt: new Date().toISOString() };
       await this.atomic(join(this.root, 'receipts', `${receipt.id}.json`),
         Buffer.from(JSON.stringify(receipt, null, 2)));
       return receipt;

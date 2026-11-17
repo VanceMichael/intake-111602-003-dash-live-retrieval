@@ -1,0 +1,33 @@
+{
+  "phases": [
+    {
+      "routes": [
+        {
+          "path": "/live.mpd",
+          "headers": { "content-type": "application/dash+xml" },
+          "body": "<?xml version=\"1.0\"?><MPD xmlns=\"urn:mpeg:dash:schema:mpd:2011\" type=\"dynamic\" availabilityStartTime=\"2026-10-12T02:00:00Z\" publishTime=\"2026-10-12T02:00:30Z\" timeShiftBufferDepth=\"PT60S\"><Period id=\"opening\" start=\"PT0S\"><AdaptationSet mimeType=\"video/mp4\"><Representation id=\"cam-gap\" bandwidth=\"400000\"><BaseURL>/media/g/opening/</BaseURL><SegmentTemplate timescale=\"1\" initialization=\"init.mp4\" media=\"$Time$.m4s\"><SegmentTimeline><S t=\"0\" d=\"4\" r=\"1\"/><S d=\"0\" r=\"1\"/></SegmentTimeline></SegmentTemplate></Representation></AdaptationSet></Period><Period id=\"closing\" start=\"PT20S\"><AdaptationSet mimeType=\"video/mp4\"><Representation id=\"cam-gap\" bandwidth=\"400000\"><BaseURL>/media/g/closing/</BaseURL><SegmentTemplate timescale=\"1\" initialization=\"init.mp4\" media=\"$Time$.m4s\"><SegmentTimeline><S t=\"0\" d=\"4\" r=\"-1\"/></SegmentTimeline></SegmentTemplate></Representation></AdaptationSet></Period></MPD>"
+        },
+        {
+          "path": "/media/g/opening/init.mp4",
+          "headers": { "content-type": "video/mp4" },
+          "base64": "AAAAGGZ0eXBpc29tAAAAAWdvcA=="
+        },
+        {
+          "path": "/media/g/closing/init.mp4",
+          "headers": { "content-type": "video/mp4" },
+          "base64": "AAAAGGZ0eXBpc29tAAAAAWdjbg=="
+        },
+        { "path": "/media/g/opening/0.m4s", "headers": { "content-type": "video/iso.segment" }, "base64": "AAAAB2ctb3AtMDA=" },
+        { "path": "/media/g/opening/4.m4s", "headers": { "content-type": "video/iso.segment" }, "base64": "AAAAB2ctb3AtMDQ=" },
+        { "path": "/media/g/closing/0.m4s", "headers": { "content-type": "video/iso.segment" }, "base64": "AAAAB2ctY2wtMjA=" },
+        { "path": "/media/g/closing/4.m4s", "headers": { "content-type": "video/iso.segment" }, "base64": "AAAAB2ctY2wtMjQ=" },
+        { "path": "/media/g/closing/8.m4s", "headers": { "content-type": "video/iso.segment" }, "base64": "AAAAB2ctY2wtMjg=" },
+        {
+          "path": "/clock",
+          "headers": { "content-type": "application/json" },
+          "body": "{\"now\": \"2026-10-12T02:00:30Z\"}"
+        }
+      ]
+    }
+  ]
+}

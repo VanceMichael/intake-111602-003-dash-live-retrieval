@@ -5,6 +5,6 @@ export function dispatch({ url, phase }) {
     if (phase && time < 8) return { status: 410, json: { error: '媒体片段已离开可用窗口', time } };
     if (time > (phase ? 16 : 8)) return { status: 404, json: { error: '片段尚不可用', time } };
   }
-  if (url.pathname === '/clock') return { json: { now: phase ? '2026-10-12T01:00:20Z' : '2026-10-12T01:00:12Z' } };
+  // /clock 与其他路径交给场景夹具的路由决定，不在此硬编码受控时钟。
   return null;
 }

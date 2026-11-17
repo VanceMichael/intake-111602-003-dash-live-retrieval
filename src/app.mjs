@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { Catalog } from './catalog.mjs';
 import { decode } from './decode.mjs';
 import { SourceClient } from './transport.mjs';
+import { Archive } from './archive.mjs';
 import { profile } from './profile.mjs';
 
 export async function previewOne(base, path = profile.previewPath) {
@@ -11,8 +12,21 @@ export async function previewOne(base, path = profile.previewPath) {
   return { ...result, preview: decode(result.bytes, result.headers) };
 }
 
-export async function startApplication({ source, root, port = 0 }) {
+async function readJson(request) {
+  const chunks = [];
+  for await (const chunk of request) chunks.push(chunk);
+  const text = Buffer.concat(chunks).toString('utf8');
+  return text ? JSON.parse(text) : {};
+}
+
+export async function startApplication({ source, root, port = 0,
+  archiveIntervalMs = Number(process.env.ARCHIVE_INTERVAL_MS || 1000),
+  archiveHeaders = {} } = {}) {
   const catalog = await new Catalog(root).initialize();
+  const archive = await new Archive({
+    client: new SourceClient(source), catalog, root: `${root}/archive`,
+    intervalMs: archiveIntervalMs, headers: archiveHeaders
+  }).initialize();
   const server = createServer(async (request, response) => {
     response.setHeader('content-type', 'application/json; charset=utf-8');
     try {
@@ -33,6 +47,24 @@ export async function startApplication({ source, root, port = 0 }) {
         return response.end(JSON.stringify(receipt));
       }
       if (request.method === 'GET' && url.pathname === '/receipts') return response.end(JSON.stringify(await catalog.list()));
+      if (request.method === 'POST' && url.pathname === '/archive/select') {
+        const input = await readJson(request);
+        const selections = archive.select(input.representations);
+        await archive.persist();
+        return response.end(JSON.stringify({ selections: archive.status().selections, raw: selections }));
+      }
+      if (request.method === 'POST' && url.pathname === '/archive/start') {
+        return response.end(JSON.stringify(archive.start()));
+      }
+      if (request.method === 'POST' && url.pathname === '/archive/pause') {
+        return response.end(JSON.stringify(await archive.pause()));
+      }
+      if (request.method === 'POST' && url.pathname === '/archive/tick') {
+        return response.end(JSON.stringify(await archive.tick()));
+      }
+      if (request.method === 'GET' && url.pathname === '/archive/status') {
+        return response.end(JSON.stringify(archive.status()));
+      }
       if (request.method === 'GET' && url.pathname.startsWith('/objects/')) {
         response.setHeader('content-type', 'application/octet-stream');
         return response.end(await catalog.object(url.pathname.split('/').at(-1)));
@@ -45,8 +77,9 @@ export async function startApplication({ source, root, port = 0 }) {
     }
   });
   await new Promise(resolve => server.listen(port, '127.0.0.1', resolve));
-  return { base: `http://127.0.0.1:${server.address().port}`, catalog,
-    close: () => new Promise(resolve => { server.closeAllConnections(); server.close(resolve); }) };
+  return { base: `http://127.0.0.1:${server.address().port}`, catalog, archive,
+    close: async () => { await archive.close(); server.closeAllConnections();
+      await new Promise(resolve => server.close(resolve)); } };
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
